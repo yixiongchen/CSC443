@@ -17,12 +17,16 @@ void read_blocks_seq(char * filename, int size){
         exit (1);
     }
     /* Read records from the file to the buffer. */
-    clock_t begin = clock();                
+              
     while (fread (buf, size, 1, fp) > 0){
-    	for(int i=0; i< (size / sizeof(struct record)); i++)
-    		printf ( "%d\n", buf[i*sizeof(struct record)]);
+
+    	for(int i=0; i< (size / sizeof(struct record)); i++){
+
+    		printf ("%d\n", buf[i*sizeof(struct record)]);
+
+    	}
     }
-    clock_t end = clock();
+
 
     fclose (fp);
     return 0;
