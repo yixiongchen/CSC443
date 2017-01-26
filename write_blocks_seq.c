@@ -34,14 +34,14 @@ int main(int argc, char **argv) {
 
     /* open text file for reading */
     if (!(fp_read= fopen ( file_name , "r" ))) {
-	printf ("Could not open file \"%s\" for reading \n", file_name);
-	return (-1);
+    printf ("Could not open file \"%s\" for reading \n", file_name);
+    return (-1);
     }
     
     /* open dat file for writing */
     if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
-	printf ("Could not open file \"records.dat\" for reading \n");
-	return (-1);
+    printf ("Could not open file \"records.dat\" for reading \n");
+    return (-1);
     }
     
     int records_in_buffer = 0;
@@ -50,23 +50,22 @@ int main(int argc, char **argv) {
     /* reading lines */
     ftime(&t_begin);
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
-	Record r = parseToRecord(current_line);
-	if (records_in_buffer >= records_per_block){
-	    fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-	    fflush (fp_write);
-	    memset(buffer, 0, block_size);
-	    records_in_buffer = 0;
-	}
-	buffer[j] = r;
-	j++;
-	records_in_buffer++;
-	total_records++;
+    current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
+    Record r = parseToRecord(current_line);
+    if (records_in_buffer >= records_per_block){
+        fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+        fflush (fp_write);
+        memset(buffer, 0, block_size);
+        records_in_buffer = 0;
     }
-
+    buffer[j] = r;
+    j++;
+    records_in_buffer++;
+    total_records++;
+    }
+    
     if (records_in_buffer > 0){
-	fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-
+    fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
     }
     
     fflush(fp_write);
@@ -76,7 +75,7 @@ int main(int argc, char **argv) {
     
     /* time elapsed in milliseconds */
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
-	+ (t_end.millitm - t_begin.millitm)); 
+    + (t_end.millitm - t_begin.millitm)); 
  
     long MB = 1024 * 1024;
     /* result in MB per second */
@@ -87,4 +86,3 @@ int main(int argc, char **argv) {
 
     return(0);
 }
-
