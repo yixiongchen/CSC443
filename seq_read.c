@@ -16,6 +16,7 @@ int read_blocks_seq(char * file_name, int size){
 	if (!(fp_read = fopen ( file_name , "rb" ))){
 		exit(1);
 	}
+
 	/* read records into buffer */
 	while (fread (buffer, sizeof(Record), records_per_block, fp_read) > 0){
 		for(int i=0; i < records_per_block; i++){
@@ -23,7 +24,12 @@ int read_blocks_seq(char * file_name, int size){
 			printf("%d  %d\n", buffer[i].uid1, buffer[i].uid2);
 		}
 	};
-	
+
+	if (result!=records_per_block){
+		printf("error fread");
+		exit(1);
+	}
+
 	fclose (fp_read);
 	free (buffer);
 	return 0;
