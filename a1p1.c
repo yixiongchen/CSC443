@@ -1,11 +1,48 @@
 #include <stdio.h>
-#include "a1.h"
+#include <stdlib.h>
+#include <string.h>
 
-main() {
-   FILE *fp;
+#include "a1p1.h"
 
-   fp = fopen("/tmp/test.txt", "w+");
-   fprintf(fp, "This is testing for fprintf...\n");
-   fputs("This is testing for fputs...\n", fp);
-   fclose(fp);
+
+Record parseToRecord(char* str) {
+
+   Record r;
+   
+   r.uid1 = atoi(strtok(str, ","));
+   r.uid2 = atoi(strtok(NULL, ","));
+
+   return r; 
 }
+
+
+int main()
+{
+   /*
+   FILE *fp;
+   char str[60];
+
+   fp = fopen("edges.csv" , "r");
+   if(fp == NULL) 
+   {
+      perror("Error opening file");
+      return(-1);
+   }
+   while ( fgets (str, 60, fp)!=NULL ) 
+   {
+      char *uid = strtok(str, ",");
+      while( uid != NULL ) 
+      {
+	  
+	  uid = strtok(NULL, ",");
+      }
+   }
+   fclose(fp);*/
+   
+   char str[] = "1,2";
+   Record r = parseToRecord(str);
+   printf("%d, %d\n", r.uid1, r.uid2);
+   
+   return(0);
+}
+
