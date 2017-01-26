@@ -60,7 +60,6 @@ int main(int argc, char **argv) {
 
     //printf("total_records: %d\n", total_records);
     
-    int i;
     if (total_records > 0){
 	/*for (i = 0; i < total_records; i++){
 	    printf("%d, %d\n", buffer[i].uid1, buffer[i].uid2);
