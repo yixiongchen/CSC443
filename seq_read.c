@@ -1,46 +1,42 @@
 #include <stdio.h>
-#include "a1.h"
+#include <stdlib.h>
+#include <string.h>
+#include "write_blocks_seq.h"
 
 
 
-void read_blocks_seq(char * filename, int size){
+int read_blocks_seq(char * file_name, int size){
+	int block_size = size;
+	int records_per_block = block_size / sizeof(Record);
+	FILE *fp_read;
 
-	if(size % sizeof(struct record) != 0){
-		return 0;
+	/* allocate buffer for 1 block */
+	Record* buffer = (Record *) calloc (records_per_block, sizeof(Record)) ;
+
+	if (!(fp_read = fopen ( file_name , "rb" ))){
+		exit(1);
 	}
-	FILE *fp;
-    char buf[size];
-    /* Open an existing binary file for reading a record at a time. */
-    if ((fp=fopen (filename, "rb, type=record")) == NULL)
-    {
-        printf ("Cannot open file\n");
-        exit (1);
-    }
-    /* Read records from the file to the buffer. */
-              
-    while (fread (buf, size, 1, fp) > 0){
-
-    	for(int i=0; i< (size / sizeof(struct record)); i++){
-
-    		printf ("%d\n", buf[i*sizeof(struct record)]);
-
-    	}
-    }
-
-
-    fclose (fp);
-    return 0;
+	/* read records into buffer */
+	int result = fread (buffer, sizeof(Record), records_per_block, fp_read);
+	printf("test for %d  %d\n", buffer[2].uid1, buffer[2].uid2);
+	for(int i=0; i < records_per_block; i++){
+		printf("i is %d\n", i);
+	    printf("%d  %d\n", buffer[i].uid1, buffer[i].uid2);
+	}
+	if (result!=records_per_block){
+		exit(1);
+	}
+	fclose (fp_read);
+	free (buffer);
+	return 0;
 }
 
 void read_ram_seq(char *filename){
 	FILE *fp;
-	fseek(f, 0, SEEK_END); // seek to end of file
-    int size = ftell(f); // get current file pointer
-    fseek(f, 0, SEEK_SET); // seek back to beginning of file
     // proceed with allocating memory and reading the file
-    char buf[size];
+    char buf[1024];
     /* Open an existing binary file for reading a record at a time. */
-    if (( fp = fopen (filename, "rb, type=record" ) ) == NULL )
+    if ((fp = fopen (filename, "rb, type=record" ) ) == NULL )
     {
         printf ( "Cannot open file\n" );
         exit (1);
@@ -48,6 +44,21 @@ void read_ram_seq(char *filename){
     /* Read records from the file to the buffer.                 */
     fread (buf, sizeof(buf), 1, fp);
     printf ( "%6s\n", buf );
-    fclose ( fp );
-    return 0;
+    fclose (fp);
 }
+
+
+
+int main(int argc, char **argv) {
+	 char *filename = argv[1];
+     int blockSize = atoi(argv[2]);
+     read_blocks_seq(filename, blockSize);
+	}
+
+
+
+
+
+
+
+
