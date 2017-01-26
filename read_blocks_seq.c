@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "write_blocks_seq.h"
+#include <sys/timeb.h>
 
 /*
   calculate how many users in total
@@ -39,6 +40,10 @@ int read_blocks_seq(char * file_name, int blocksize){
 	int current_num;
 	int total_following = 0;
 
+	struct timeb t_begin, t_end;
+    long time_spent_ms;
+    long total_records = 0; 
+
 	/* allocate buffer for 1 block */
 	Record* buffer = (Record *) calloc (records_per_block, sizeof(Record)) ;
 	if (!(fp_read = fopen ( file_name , "rb" ))){
@@ -52,6 +57,7 @@ int read_blocks_seq(char * file_name, int blocksize){
     printf("Record size is %d\n", file_record_size);
    
 	/* read records into buffer */
+	ftime(&t_begin); 
 	while (fread (buffer, sizeof(Record), records_per_block, fp_read) > 0){
 		/*how many records left to read after reading one block*/
 		int left_records = file_record_size - records_per_block;
@@ -67,6 +73,8 @@ int read_blocks_seq(char * file_name, int blocksize){
 		}
 		/*compute the query*/
 		for(int i=0; i < length; i++){
+
+			total_records ++;
 
 			total_following += 1;
 
@@ -88,13 +96,21 @@ int read_blocks_seq(char * file_name, int blocksize){
 				}
 			}	
 		}
-
 		printf("read one block\n");
 
 	}
 
 	fclose (fp_read);
 	free (buffer);
+
+	ftime(&t_end); 
+	/* time elapsed in milliseconds */
+	time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm)); 
+    /* result in MB per second */
+    printf ("Data rate: %.3f BPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000));
+
+
     int total_user = read_users("nodes.csv");
     int average = total_following / total_user;
 	printf("The userid has most follows is %d with Maximum number is %d\n", most_follow_id, max_num);
@@ -116,6 +132,11 @@ void read_ram_seq(char *filename){
 	int current_id;
 	int current_num;
 	int total_following = 0;
+
+	struct timeb t_begin, t_end;
+    long time_spent_ms;
+    long total_records = 0; 
+
     /* Open an existing binary file for reading a record at a time. */
     if ((fp_read = fopen (filename, "rb, type=record" ) ) == NULL )
     {
@@ -132,7 +153,9 @@ void read_ram_seq(char *filename){
     Record* buffer = (Record *) calloc (file_record_size, sizeof(Record)) ;
     printf("Total allocated records size is %d\n", file_record_size);
     /* Read records from the file to the buffer.                 */
+    total_records =  file_record_size;
     fread (buffer, sizeof(Record), file_record_size, fp_read);
+    ftime(&t_end); 
     /*compute the query*/
     for(int i=0; i < file_record_size; i++){
 
@@ -159,6 +182,14 @@ void read_ram_seq(char *filename){
 
 	free (buffer);
     fclose (fp_read);
+
+    /* time elapsed in milliseconds */
+	time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm)); 
+    /* result in MB per second */
+    printf ("Data rate: %.3f BPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000));
+
+
     int total_user = read_users("nodes.csv");
     int average = total_following / total_user;
 	printf("The userid has most follows is %d with Maximum number is %d\n", most_follow_id, max_num);
@@ -168,8 +199,8 @@ void read_ram_seq(char *filename){
 
 int main(int argc, char **argv) {
 	 char *filename = argv[1];
-     /*int blockSize = atoi(argv[2]);*/
-     /*read_blocks_seq(filename, blockSize);*/
+     /* int blockSize = atoi(argv[2]); */
+     /*read_blocks_seq(filename, blockSize); */
      read_ram_seq(filename);
 	}
 
