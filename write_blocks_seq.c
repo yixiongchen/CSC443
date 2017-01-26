@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/timeb.h>
 
 #include "write_blocks_seq.h"
 
@@ -17,6 +18,10 @@ Record parseToRecord(char* str) {
 
 
 int main(int argc, char **argv) {
+    
+    struct timeb t_begin, t_end;
+    long time_spent_ms;
+    long total_records = 0;
   
     char *file_name = argv[1];
     int block_size = atoi(argv[2]);
@@ -39,39 +44,45 @@ int main(int argc, char **argv) {
 	return (-1);
     }
     
-    int total_records = 0;
-    //printf("records_per_block = %d\n", records_per_block);
+    int records_in_buffer = 0;
     
     int j = 0;
     /* reading lines */
+    ftime(&t_begin);
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
 	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
 	Record r = parseToRecord(current_line);
-	if (total_records >= records_per_block){
-	    fwrite ( buffer, sizeof(Record), total_records, fp_write);
+	if (records_in_buffer >= records_per_block){
+	    fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
 	    fflush (fp_write);
 	    memset(buffer, 0, block_size);
-	    total_records = 0;
+	    records_in_buffer = 0;
 	}
 	buffer[j] = r;
 	j++;
+	records_in_buffer++;
 	total_records++;
     }
-
-    //printf("total_records: %d\n", total_records);
     
-    int i;
-    if (total_records > 0){
-	/*for (i = 0; i < total_records; i++){
-	    printf("%d, %d\n", buffer[i].uid1, buffer[i].uid2);
-	}*/
-	fwrite ( buffer, sizeof(Record), total_records, fp_write);
+    if (records_in_buffer > 0){
+	fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
     }
     
     fflush(fp_write);
-    free(buffer);
-    fclose(fp_read);  
     fclose(fp_write);
+    
+    ftime(&t_end);
+    
+    /* time elapsed in milliseconds */
+    time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
+	+ (t_end.millitm - t_begin.millitm)); 
+ 
+    long MB = 1024 * 1024;
+    /* result in MB per second */
+    printf ("Data rate: %.3f MBPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+    
+    free(buffer);
+    fclose(fp_read);     
 
     return(0);
 }

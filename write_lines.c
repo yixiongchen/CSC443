@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/timeb.h>
 
 #include "write_blocks_seq.h"
 
 
 int main(int argc, char **argv) {
+    
+    struct timeb t_begin, t_end;
+    long time_spent_ms;
   
     char *file_name = argv[1];
     
@@ -26,13 +30,24 @@ int main(int argc, char **argv) {
 	return (-1);
     }
     
+    ftime(&t_begin);
+    
     /* reading lines */
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
 	fprintf(fp_write, "%s", current_line);
     }
     
-    fclose(fp_read);  
     fclose(fp_write);
+    ftime(&t_end);
+    
+    /* time elapsed in milliseconds */
+    time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
+	+ (t_end.millitm - t_begin.millitm)); 
+    
+    /* result in MB per second */
+    printf ("Time spent: %.3f second(s)\n", (float)time_spent_ms/1000);
+    
+    fclose(fp_read);  
 
     return(0);
 }
