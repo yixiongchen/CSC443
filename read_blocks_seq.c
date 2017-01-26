@@ -13,6 +13,10 @@ int read_blocks_seq(char * file_name, int blocksize){
 	int block_size = blocksize;
 	int records_per_block = block_size / sizeof(Record);
 	FILE *fp_read;
+	int most_follow_id;
+	int max_num = 0;
+	int current_id;
+	int current_num;
 
  
 
@@ -23,29 +27,64 @@ int read_blocks_seq(char * file_name, int blocksize){
 	}
 	/*first get the size of opening file*/
 	fseek(fp_read, 0, SEEK_END);
-    int sz = ftell(fp_read);
+    int file_size = ftell(fp_read);
     fseek(fp_read, 0, SEEK_SET); 
-    int file_record_size = sz / sizeof(Record);
+    int file_record_size = file_size / sizeof(Record);
     printf("Record size is %d\n", file_record_size);
 
+   
 	/* read records into buffer */
 	while (fread (buffer, sizeof(Record), records_per_block, fp_read) > 0){
-
+		/*how many records left to read*/
 		int left_records = file_record_size - records_per_block;
-		if(left_records >= 0)
+		if(left_records >= 0){
 			for(int i=0; i < records_per_block; i++){
-				printf("Record %d\n", i);
-				printf("%d  %d\n", buffer[i].uid1, buffer[i].uid2);
+				if(buffer[i].uid1 == current_id){
+					current_num += 1;
+					current_id = buffer[i].uid1;
+					if(current_num > max_num){
+						most_follow_id = current_num;
+						max_num = current_num;
+					}
+				}
+				else{
+					/*initialization */
+					current_num = 1;
+					current_id = buffer[i].uid1;
+					if(current_num > max_num){
+						most_follow_id = current_id;
+						max_num = current_num;
+					}
+				}
 				file_record_size = file_record_size - records_per_block;
 			}
+		}
+
 		else{
 			for(int j=0; j < file_record_size; j++){
-				printf("Record %d\n", j);
-				printf("%d  %d\n", buffer[j].uid1, buffer[j].uid2);
+				if(buffer[j].uid1 == current_id){
+					current_num += 1;
+					current_id = buffer[j].uid1;
+					if(current_num > max_num){
+						most_follow_id = current_id;
+						max_num = current_num;
+					}
+				}
+				else{
+					/*initialization */
+					current_num = 1;
+					current_id = buffer[j].uid1;
+					if(current_num > max_num){
+						most_follow_id = current_id;
+						max_num = current_num;
+					}
+				}
 			}
-
 		}
 	};
+
+	printf("The userid has most follows is %d\n", most_follow_id);
+	printf("Maximum number is %d\n", max_num);
 
 	fclose (fp_read);
 	free (buffer);

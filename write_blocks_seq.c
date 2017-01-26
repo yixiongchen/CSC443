@@ -50,18 +50,20 @@ int main(int argc, char **argv) {
     /* reading lines */
     ftime(&t_begin);
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-    current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
-    Record r = parseToRecord(current_line);
-    if (records_in_buffer >= records_per_block){
-        fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-        fflush (fp_write);
-        memset(buffer, 0, block_size);
-        records_in_buffer = 0;
-    }
-    buffer[j] = r;
-    j++;
-    records_in_buffer++;
-    total_records++;
+	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
+	if (strlen(current_line) > 0){
+	    Record r = parseToRecord(current_line);
+	    if (records_in_buffer >= records_per_block){
+		fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+		fflush (fp_write);
+		memset(buffer, 0, block_size);
+		records_in_buffer = 0;
+	    }
+	    buffer[j] = r;
+	    j++;
+	    records_in_buffer++;
+	    total_records++;
+	}
     }
     
     if (records_in_buffer > 0){
@@ -73,16 +75,16 @@ int main(int argc, char **argv) {
     
     ftime(&t_end);
     
+    free(buffer);
+    fclose(fp_read);
+    
     /* time elapsed in milliseconds */
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
     + (t_end.millitm - t_begin.millitm)); 
  
     long MB = 1024 * 1024;
     /* result in MB per second */
-    printf ("Data rate: %.3f MBPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
-    
-    free(buffer);
-    fclose(fp_read);     
+    printf ("block size: %d, rate: %.3f MBPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 
     return(0);
 }
