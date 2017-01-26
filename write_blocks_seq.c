@@ -40,8 +40,9 @@ int main(int argc, char **argv) {
     }
     
     int total_records = 0;
-    printf("records_per_block = %d\n", records_per_block);
+    //printf("records_per_block = %d\n", records_per_block);
     
+    int j = 0;
     /* reading lines */
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
 	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
@@ -52,13 +53,18 @@ int main(int argc, char **argv) {
 	    memset(buffer, 0, block_size);
 	    total_records = 0;
 	}
-	memcpy(buffer, &r, sizeof(Record));
+	buffer[j] = r;
+	j++;
 	total_records++;
     }
 
-    printf("total_records: %d\n", total_records);
+    //printf("total_records: %d\n", total_records);
     
+    int i;
     if (total_records > 0){
+	/*for (i = 0; i < total_records; i++){
+	    printf("%d, %d\n", buffer[i].uid1, buffer[i].uid2);
+	}*/
 	fwrite ( buffer, sizeof(Record), total_records, fp_write);
     }
     
