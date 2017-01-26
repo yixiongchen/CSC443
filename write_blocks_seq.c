@@ -18,7 +18,7 @@ Record parseToRecord(char* str) {
 
 int main(int argc, char **argv) {
    FILE *fp, *records;
-   char str[256];
+   char str[LINE_LENGTH];
    
    char *filename = argv[1];
    int blockSize = atoi(argv[2]);
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
    
    char buffer[blockSize];
    
-   while (fgets(str, 256, fp)!=NULL ) 
+   while (fgets(str, LINE_LENGTH, fp)!=NULL ) 
    {
       Record r = parseToRecord(str);
       if (blockSize - strlen(buffer) >= sizeof(Record)){
