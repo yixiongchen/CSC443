@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
  
     long MB = 1024 * 1024;
     /* result in MB per second */
-    printf ("block size: %d, rate: %.3f MBPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+    printf ("block size: %d bytes, rate: %.3f MBPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 
     return(0);
 }
