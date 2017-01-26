@@ -1,4 +1,4 @@
-#define LINE_LENGTH 1024
+#define MAX_CHARS_PER_LINE 1024
 
 typedef struct record{
   int uid1;
