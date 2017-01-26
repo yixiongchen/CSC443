@@ -7,56 +7,66 @@
 
 Record parseToRecord(char* str) {
 
-   Record r;
-   
-   r.uid1 = atoi(strtok(str, ","));
-   r.uid2 = atoi(strtok(NULL, ","));
+    Record r;
+    
+    r.uid1 = atoi(strtok(str, ","));
+    r.uid2 = atoi(strtok(NULL, ","));
 
-   return r; 
+    return r; 
 }
 
 
 int main(int argc, char **argv) {
-   FILE *fp, *records;
-   char str[LINE_LENGTH];
-   
-   char *filename = argv[1];
-   int blockSize = atoi(argv[2]);
-   
-   records = fopen("records.dat","wb");
-   if (!records){
-      perror("Error opening file to write");
-      return 1;
-   } 
-   
-   fp = fopen(filename, "r");
-   if(fp == NULL)
-   {
-      perror("Error opening file to read");
-      return(-1);
-   }
-   
-   char buffer[blockSize];
-   
-   while (fgets(str, LINE_LENGTH, fp)!=NULL ) 
-   {
-      Record r = parseToRecord(str);
-      if (blockSize - strlen(buffer) >= sizeof(Record)){
-	memcpy(buffer, &r, sizeof(Record));
-      }
-      else{
-	fwrite(&buffer, blockSize, 1, records);
-	memset(buffer, 0, blockSize);
-      }
-   }
-   
-   if (strlen(buffer) > 0){
-     fwrite(&buffer, blockSize, 1, records);
-   }
-   
-   fclose(fp);
-   fclose(records);
+  
+    char *file_name = argv[1];
+    int block_size = atoi(argv[2]);
+    int records_per_block = block_size/sizeof(Record);
+    
+    char current_line[MAX_CHARS_PER_LINE];
+    FILE *fp_read, *fp_write;
+    Record * buffer = (Record *) calloc (records_per_block, sizeof (Record));
+ 
 
-   return(0);
+    /* open text file for reading */
+    if (!(fp_read= fopen ( file_name , "r" ))) {
+	printf ("Could not open file \"%s\" for reading \n", file_name);
+	return (-1);
+    }
+    
+    /* open dat file for writing */
+    if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
+	printf ("Could not open file \"records.dat\" for reading \n");
+	return (-1);
+    }
+    
+    int total_records = 0;
+    printf("records_per_block = %d\n", records_per_block);
+    
+    /* reading lines */
+    while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
+	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
+	Record r = parseToRecord(current_line);
+	if (total_records >= records_per_block){
+	    fwrite ( buffer, sizeof(Record), total_records, fp_write);
+	    fflush (fp_write);
+	    memset(buffer, 0, block_size);
+	    total_records = 0;
+	}
+	memcpy(buffer, &r, sizeof(Record));
+	total_records++;
+    }
+
+    printf("%d\n", total_records);
+    
+    if (total_records > 0){
+	fwrite ( buffer, sizeof(Record), total_records, fp_write);
+	fflush (fp_write);
+    }
+    
+    free(buffer);
+    fclose(fp_read);  
+    fclose(fp_write);
+
+    return(0);
 }
 
