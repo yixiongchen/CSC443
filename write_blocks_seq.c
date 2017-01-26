@@ -56,13 +56,13 @@ int main(int argc, char **argv) {
 	total_records++;
     }
 
-    printf("%d\n", total_records);
+    printf("total_records: %d\n", total_records);
     
     if (total_records > 0){
 	fwrite ( buffer, sizeof(Record), total_records, fp_write);
-	fflush (fp_write);
     }
     
+    fflush(fp_write);
     free(buffer);
     fclose(fp_read);  
     fclose(fp_write);
