@@ -8,24 +8,6 @@
 #include <sys/timeb.h>
 
 
-/*
-  calculate how many users in total
-*/
-int read_users(char * file_name){
-    FILE *fp_read;
-    int count_num = 0;
-    char current_line[MAX_CHARS_PER_LINE];
-    if (!(fp_read= fopen ( file_name , "r" ))) {
-        printf ("Could not open file \"%s\" for reading \n", file_name);
-        return (-1);
-    }
-    while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-        count_num ++ ;
-    }
-    fclose (fp_read);
-    return count_num;
-}
-
 
 /*
   read the entire binary file into a large in-memory buffer, 

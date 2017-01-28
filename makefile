@@ -11,9 +11,10 @@ WRITE_BLOCKS_SRC=write_blocks_seq.c
 WRITE_LINES_SRC=write_lines.c
 READ_BLOCKS_SRC = read_blocks_seq.c
 READ_RAM_SRC = read_ram_seq.c
+WRITE_RAM_RAND_SRC = write_ram_rand.c
  
 # Binaries
-all: write_blocks_seq write_lines read_blocks_seq read_ram_seq
+all: write_blocks_seq write_lines read_blocks_seq read_ram_seq write_ram_rand
  
 #sequential writing in blocks
 write_blocks_seq: $(WRITE_BLOCKS_SRC)
@@ -21,5 +22,5 @@ write_blocks_seq: $(WRITE_BLOCKS_SRC)
  
 
 clean:  
-	rm write_blocks_seq write_lines read_blocks_seq read_ram_seq
+	rm write_blocks_seq write_lines read_blocks_seq read_ram_seq write_ram_rand
   
