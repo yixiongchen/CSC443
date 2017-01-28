@@ -52,6 +52,7 @@ void read_blocks_seq(char * file_name, int blocksize){
     int file_size = ftell(fp_read);
     fseek(fp_read, 0, SEEK_SET); 
     int file_record_size = file_size / sizeof(Record);
+    printf("filesize is %d\n", file_size);
     printf("Record size is %d\n", file_record_size);
    
 	/* read records into buffer */
