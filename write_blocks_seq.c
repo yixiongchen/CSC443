@@ -34,14 +34,14 @@ int main(int argc, char **argv) {
 
     /* open text file for reading */
     if (!(fp_read= fopen ( file_name , "r" ))) {
-    printf ("Could not open file \"%s\" for reading \n", file_name);
-    return (-1);
+	printf ("Could not open file \"%s\" for reading \n", file_name);
+	return (-1);
     }
     
     /* open dat file for writing */
     if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
-    printf ("Could not open file \"records.dat\" for reading \n");
-    return (-1);
+	printf ("Could not open file \"records.dat\" for reading \n");
+	return (-1);
     }
     
     int records_in_buffer = 0;
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
     }
     
     if (records_in_buffer > 0){
-    fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+	fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
     }
     
     fflush(fp_write);
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
     
     /* time elapsed in milliseconds */
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
-    + (t_end.millitm - t_begin.millitm)); 
+	+ (t_end.millitm - t_begin.millitm)); 
  
     long MB = 1024 * 1024;
     /* result in MB per second */
