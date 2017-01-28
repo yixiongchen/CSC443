@@ -10,9 +10,10 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 WRITE_BLOCKS_SRC=write_blocks_seq.c
 WRITE_LINES_SRC=write_lines.c
 READ_BLOCKS_SRC = read_blocks_seq.c
+READ_RAM_SRC = read_ram_seq.c
  
 # Binaries
-all: write_blocks_seq write_lines read_blocks_seq
+all: write_blocks_seq write_lines read_blocks_seq read_ram_seq
  
 #sequential writing in blocks
 write_blocks_seq: $(WRITE_BLOCKS_SRC)
@@ -20,5 +21,5 @@ write_blocks_seq: $(WRITE_BLOCKS_SRC)
  
 
 clean:  
-	rm write_blocks_seq write_lines read_blocks_seq 
+	rm write_blocks_seq write_lines read_blocks_seq read_ram_seq
   
