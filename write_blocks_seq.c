@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sys/timeb.h>
 
-#include "write_blocks_seq.h"
+#include "a1p1.h"
 
 
 Record parseToRecord(char* str) {
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	    if (records_in_buffer >= records_per_block){
 		fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
 		fflush (fp_write);
-		memset(buffer, 0, block_size);
+		j = 0;
 		records_in_buffer = 0;
 	    }
 	    buffer[j] = r;

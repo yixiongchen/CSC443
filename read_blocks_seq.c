@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "write_blocks_seq.h"
+#include "a1p1.h"
 #include <sys/timeb.h>
 
 
@@ -18,7 +18,7 @@ void read_blocks_seq(char * file_name, int blocksize){
     int most_follow_id;
     int max_num = 0;
     int current_id = NULL;
-    int current_num = 1;
+    int current_num = 0;
     int unique_uids = 0;
 
     struct timeb t_begin, t_end;
@@ -68,7 +68,11 @@ void read_blocks_seq(char * file_name, int blocksize){
 		/*initialization */
 		current_num = 1;
 		current_id = buffer[i].uid1;
-	    }	
+	    }
+	}
+	if (current_num > max_num){
+	    most_follow_id = current_id;
+	    max_num = current_num;
 	}
     }
 

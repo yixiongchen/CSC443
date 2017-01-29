@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "write_blocks_seq.h"
+#include "a1p1.h"
 #include <sys/timeb.h>
 
 
@@ -60,6 +60,10 @@ void read_ram_seq(char *filename){
 		current_id = buffer[i].uid1;
 		unique_ids++;
 	    }
+	}
+	if(current_num > max_num){
+	    most_follow_id = current_id;
+	    max_num = current_num;
 	}
 	ftime(&t_end);
     }
