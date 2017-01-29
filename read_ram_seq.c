@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "write_blocks_seq.h"
+#include "a1p1.h"
 #include <sys/timeb.h>
 
 
@@ -42,26 +42,31 @@ void read_ram_seq(char *filename){
     // Read records from the file to the buffer.
     int result = fread (buffer, sizeof(Record), total_records, fp_read);
     if (result == total_records){
-    /*compute the query*/
-    int i;
-    ftime(&t_begin);
-    for(i=0; i < total_records; i++){
-        if(buffer[i].uid1 == current_id){
-        current_num += 1;
-        current_id = buffer[i].uid1;
-        }
-        else{
-        if(current_num > max_num){
-            most_follow_id = current_id;
-            max_num = current_num;
-        }
-        /*initialization */
-        current_num = 1;
-        current_id = buffer[i].uid1;
-        unique_ids++;
-        }
-    }
-    ftime(&t_end);
+	/*compute the query*/
+	int i;
+	ftime(&t_begin);
+	for(i=0; i < total_records; i++){
+	    if(buffer[i].uid1 == current_id){
+		current_num += 1;
+		current_id = buffer[i].uid1;
+	    }
+	    else{
+		if(current_num > max_num){
+		    most_follow_id = current_id;
+		    max_num = current_num;
+		}
+		/*initialization */
+		current_num = 1;
+		current_id = buffer[i].uid1;
+		unique_ids++;
+	    }
+	}
+	if(current_num > max_num){
+	    most_follow_id = current_id;
+	    max_num = current_num;
+	}
+	ftime(&t_end);
+
     }
     else{
     printf ("Fread Error");

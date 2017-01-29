@@ -26,36 +26,29 @@ int main(int argc, char **argv) {
     // Get total number of records
     fseek(fp_read, 0, SEEK_END);
     int file_size = ftell(fp_read);
-    fseek(fp_read, 0, SEEK_SET); 
+    fseek(fp_read, 0, SEEK_SET);
     int total_blocks = file_size / block_size + 1;
+    int total_records = file_size / sizeof(Record);
     
     /* Intializes random number generator */
     srand((unsigned) time(&t));
 
-    Record* buffer = (Record *) calloc (records_per_block, sizeof(Record));
-
-    ftime(&t_begin);
+    Record* buffer = (Record *) calloc (total_records, sizeof(Record));
     
-    int i;
-    for (i = 0; i < X; i++){
-	// Generate a random number in range [0, total_blocks)
-	int block = rand() % total_blocks;
+    int result = fread (buffer, sizeof(Record), total_records, fp_read);
+    if (result == total_records){
+	ftime(&t_begin);
 	
-	int offset = block * block_size;
-	fseek(fp_read, offset, SEEK_SET);
-	int read_size;
-	int size_left = file_size - offset;
-	if (size_left > block_size){
-	    read_size = block_size;
-	}
-	else{
-	    read_size = size_left;
-	}
-	
-	int records_to_read = read_size/sizeof(Record);
-	int result = fread (buffer, sizeof(Record), records_to_read, fp_read);
-	
-	if (result == records_to_read){
+	int i;
+	for (i = 0; i < X; i++){
+	    // Generate a random number in range [0, total_blocks)
+	    int block = rand() % total_blocks;
+	    int start= block * records_per_block;
+	    int end = start + records_per_block;
+	    if (end > total_records){
+		end = total_records;
+	    }
+	    
 	    int sample_max_id = 0;
 	    int sample_max_num = 0;
 	    float sample_avg = 0;
@@ -64,7 +57,7 @@ int main(int argc, char **argv) {
 	    int unique_uids = 0;
 	    
 	    int j;
-	    for (j = 0; j < records_to_read; j++){
+	    for (j = start; j < end; j++){
 		if (buffer[j].uid1 == current_id){
 		    current_num += 1;
 		}
@@ -86,14 +79,14 @@ int main(int argc, char **argv) {
 	    }
 	    
 	    max_sum += sample_max_num;
-	    sample_avg = (float) records_to_read/unique_uids;
+	    sample_avg = (float) (end - start)/unique_uids;
 	    avg_sum += sample_avg;
 	    printf("block = %d, sample_max_id = %d, sample_max_num = %d, sample_avg = %f\n", block+1, sample_max_id, sample_max_num, sample_avg);
 	}
-	else{
-	    printf("FREAD ERROR\n");
-	    return(-1);
-	}
+    }
+    else{
+	printf("FREAD ERROR\n");
+	return(-1);
     }
     
     ftime(&t_end);

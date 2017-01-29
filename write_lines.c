@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sys/timeb.h>
 
-#include "write_blocks_seq.h"
+#include "a1p1.h"
 
 
 int main(int argc, char **argv) {
