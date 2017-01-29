@@ -44,8 +44,11 @@ void write_ram_rand(char * file_name, int random_num){
 
         for(i = 0; i < random_num; i++){
         	int update_position = rand() % total_records;
+            printf("position: %d\n", update_position);
+            printf("old buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
         	buffer[update_position].uid1 = 1;
         	buffer[update_position].uid2 = 2;
+            printf("new buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
         }
     	ftime(&t_end);
     }
