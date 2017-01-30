@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 	
 	int i;
 	for (i = 0; i < X; i++){
-	    // Generate a random number in range [0, total_blocks)
+	    // Generate a random number in range [0, total_records)
 	    int start = rand() % total_records;
 	    int end = start + records_per_block;
 	    if (end > total_records){
