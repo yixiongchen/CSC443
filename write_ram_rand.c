@@ -69,8 +69,6 @@ void write_ram_rand(char * file_name, int random_num){
     printf ("Data rate: %.3f MBPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 
 
-
-
 }
 
 

@@ -12,7 +12,8 @@ void write_blocks_rand(char * file_name, int random_num){
 	FILE *fp_write;
     FILE *fp_read;
 	int i;
-
+    struct timeb t_begin, t_end;
+    long time_spent_ms;
 
 	/* Intializes random number generator */
     srand (time(NULL));
@@ -31,7 +32,7 @@ void write_blocks_rand(char * file_name, int random_num){
     int total_records = file_size / sizeof(Record);
     fclose(fp_read);
 
-
+  
     /* Open an existing binary file for reading a record at a time. */
     if ((fp_write = fopen (file_name, "r+, type=record" ) ) == NULL )
     {
@@ -43,7 +44,7 @@ void write_blocks_rand(char * file_name, int random_num){
     buffer[0].uid1 = 1;
     buffer[0].uid2 = 2;
   
-
+    ftime(&t_begin); 
     for(i = 0; i < random_num; i++){
     	int update_position = rand() % total_records;
     	fseek(fp_write, update_position * sizeof(Record), SEEK_SET);
@@ -53,7 +54,16 @@ void write_blocks_rand(char * file_name, int random_num){
 
     fflush(fp_write);
     fclose (fp_write);
-    free (buffer);
+    free (buffer);  
+    ftime(&t_end); 
+    
+    time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
+    + (t_end.millitm - t_begin.millitm)); 
+    
+    long MB = 1024 * 1024;
+    /* result in MB per second */
+    printf ("rate: %.3f MBPS\n", ((random_num*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+
 
 }
 
