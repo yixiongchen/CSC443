@@ -57,7 +57,7 @@ void read_blocks_seq(char * file_name, int blocksize){
 	/*compute the query*/
 	int i;
 	for (i = 0; i < length; i++){
-        printf("Record: %d %d\n", buffer[i].uid1, buffer[i].uid2);
+        printf("[%d] Record: %d %d\n", i+1, buffer[i].uid1, buffer[i].uid2);
 	    if(buffer[i].uid1 == current_id){
 		current_num += 1;
 	    }

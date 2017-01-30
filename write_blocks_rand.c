@@ -6,17 +6,18 @@
 #include <unistd.h>
 #include "a1p1.h"
 #include <sys/timeb.h>
+#include <time.h>
 
 
 void write_blocks_rand(char * file_name, int random_num){
-	FILE *fp_write;
-    FILE *fp_read;
-	int i;
+    FILE *fp_write;
+    int i;
     struct timeb t_begin, t_end;
     long time_spent_ms;
 
-	/* Intializes random number generator */
+    /* Intializes random number generator */
     srand (time(NULL));
+
 
   
     /* Open an existing binary file for reading a record at a time. */
@@ -40,12 +41,14 @@ void write_blocks_rand(char * file_name, int random_num){
     ftime(&t_begin); 
     for(i = 0; i < random_num; i++){
     	int update_position = rand() % total_records;
+	printf("Updated records = %d\n", update_position+1);
     	fseek(fp_write, update_position * sizeof(Record), SEEK_SET);
     	fwrite (buffer, sizeof(Record), 1, fp_write);
     	fseek(fp_write, 0, SEEK_SET);
     }
 
     fflush(fp_write);
+    
     fclose (fp_write);
     free (buffer);  
     ftime(&t_end); 
@@ -57,14 +60,14 @@ void write_blocks_rand(char * file_name, int random_num){
     /* result in MB per second */
     printf ("rate: %.3f MBPS\n", ((random_num*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 
-
+    
 }
 
 int main(int argc, char **argv){
-	char *filename = argv[1];
+    char *filename = argv[1];
     int random_num = atoi(argv[2]); 
     write_blocks_rand(filename, random_num);
     
-	return (0);
+    return (0);
 }
 
