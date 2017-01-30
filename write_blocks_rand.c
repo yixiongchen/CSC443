@@ -18,20 +18,6 @@ void write_blocks_rand(char * file_name, int random_num){
 	/* Intializes random number generator */
     srand (time(NULL));
 
-	/* Open an existing binary file for reading a record at a time. */
-    if ((fp_read = fopen (file_name, "rb, type=record" ) ) == NULL )
-    {
-        printf ( "Cannot open file\n" );
-        exit (1);
-    }
-    
-    /* determine the file size   */
-    fseek(fp_read, 0, SEEK_END);
-    int file_size = ftell(fp_read);
-    fseek(fp_read, 0, SEEK_SET); 
-    int total_records = file_size / sizeof(Record);
-    fclose(fp_read);
-
   
     /* Open an existing binary file for reading a record at a time. */
     if ((fp_write = fopen (file_name, "r+, type=record" ) ) == NULL )
@@ -39,6 +25,13 @@ void write_blocks_rand(char * file_name, int random_num){
         printf ( "Cannot open file\n" );
         exit (1);
     }
+
+     /* determine the file size   */
+    fseek(fp_write, 0, SEEK_END);
+    int file_size = ftell(fp_write);
+    fseek(fp_write, 0, SEEK_SET); 
+    int total_records = file_size / sizeof(Record);
+
     // proceed with allocating memory and reading the file
     Record* buffer = (Record *) calloc (1, sizeof(Record));
     buffer[0].uid1 = 1;
