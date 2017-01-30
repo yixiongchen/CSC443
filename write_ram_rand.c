@@ -41,7 +41,6 @@ void write_ram_rand(char * file_name, int random_num){
     int result = fread (buffer, sizeof(Record), total_records, fp_read);
     if (result == total_records){
         /*update the buffer generate i positions*/
-
         for(i = 0; i < random_num; i++){
         	int update_position = rand() % total_records;
             printf("position: %d\n", update_position);

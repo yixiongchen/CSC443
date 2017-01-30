@@ -1,0 +1,7 @@
+df command:
+
+Filesystem    512-blocks      Used Available Capacity iused      ifree %iused  Mounted on
+/dev/disk1     487849984 208253960 279084024    43% 1019836 4293947443    0%   /
+devfs                365       365         0   100%     632          0  100%   /dev
+map -hosts             0         0         0   100%       0          0  100%   /net
+map auto_home          0         0         0   100%       0          0  100%   /home
