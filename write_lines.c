@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 	+ (t_end.millitm - t_begin.millitm)); 
     
     /* result in B per second */
-    printf ("rate: %.3f BPS\n", (file_size)/(float)time_spent_ms * 1000));
+    printf ("rate: %.3f BPS\n", (file_size)/(float)time_spent_ms * 1000);
     
     fclose(fp_read);  
 
