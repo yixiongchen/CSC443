@@ -1,1 +1,1 @@
-rate: 60.147 MBPS
+rate: 394.409 MBPS

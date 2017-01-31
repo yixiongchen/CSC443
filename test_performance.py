@@ -33,4 +33,3 @@ for iteration in range(1, 6):
     f2.close()
     
     print("Finished "+str(iteration)+" iteration.")
-

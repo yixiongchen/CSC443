@@ -45,12 +45,11 @@ void write_blocks_rand(char * file_name, int random_num){
     	fwrite (buffer, sizeof(Record), 1, fp_write);
     	fseek(fp_write, 0, SEEK_SET);
     }
-
-    fflush(fp_write);
+    
+    ftime(&t_end); 
     
     fclose (fp_write);
     free (buffer);  
-    ftime(&t_end); 
     
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
     + (t_end.millitm - t_begin.millitm)); 

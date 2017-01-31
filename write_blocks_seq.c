@@ -12,6 +12,7 @@ Record parseToRecord(char* str) {
     
     r.uid1 = atoi(strtok(str, ","));
     r.uid2 = atoi(strtok(NULL, ","));
+
     return r; 
 }
 
@@ -19,7 +20,7 @@ Record parseToRecord(char* str) {
 int main(int argc, char **argv) {
     
     struct timeb t_begin, t_end;
-    long time_spent_ms;
+    long time_spent_ms = 0;
     long total_records = 0;
   
     char *file_name = argv[1];
@@ -47,40 +48,36 @@ int main(int argc, char **argv) {
     
     int j = 0;
     /* reading lines */
-    ftime(&t_begin);
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-
 	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
 	if (strlen(current_line) > 0){
 	    Record r = parseToRecord(current_line);
-	    if (records_in_buffer >= records_per_block){
-            fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-            j = 0;
-            records_in_buffer = 0;
+	    if (records_in_buffer == records_per_block){
+		ftime(&t_begin);
+		fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+		ftime(&t_end);
+		records_in_buffer = 0;
+		time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
+		    + (t_end.millitm - t_begin.millitm)); 
 	    }
-	    buffer[j] = r;
-	    j++;
+	    buffer[records_in_buffer] = r;
 	    records_in_buffer++;
 	    total_records++;
 	}
-
-
     }
     
     if (records_in_buffer > 0){
+	ftime(&t_begin);
 	fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+	ftime(&t_end);
+	time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
+	    + (t_end.millitm - t_begin.millitm)); 
     }
     
-    ftime(&t_end);
-    
     fclose(fp_write);
-
+    
     free(buffer);
     fclose(fp_read);
-    
-    /* time elapsed in milliseconds */
-    time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
-	+ (t_end.millitm - t_begin.millitm)); 
  
     /* result in MB per second */
     int MB = 1024 * 1024;

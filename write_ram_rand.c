@@ -45,12 +45,12 @@ void write_ram_rand(char * file_name, int random_num){
 	    buffer[update_position].uid1 = 1;
 	    buffer[update_position].uid2 = 2;
         }
-    	ftime(&t_end);
     }
     else{
     	printf ("Fread Error");
     	return;
     }
+    ftime(&t_end);
     
     free (buffer);
     fclose (fp_read);

@@ -75,10 +75,11 @@ void read_blocks_seq(char * file_name, int blocksize){
 	}
     }
 
+    ftime(&t_end); 
+    
     fclose (fp_read);
     free (buffer);
-
-    ftime(&t_end); 
+  
     /* time elapsed in milliseconds */
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
 	+ (t_end.millitm - t_begin.millitm)); 

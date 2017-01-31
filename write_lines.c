@@ -9,7 +9,7 @@
 int main(int argc, char **argv) {
     
     struct timeb t_begin, t_end;
-    long time_spent_ms;
+    long time_spent_ms = 0;
   
     char *file_name = argv[1];
     
@@ -30,24 +30,25 @@ int main(int argc, char **argv) {
     char fp_write_name[strlen(file_name)+5];
     strcpy(fp_write_name, "copy_");
     /* open another csv file for writing */
-    if (!(fp_write = fopen ( strcat(fp_write_name, file_name) , "w+" ))) {
+    if (!(fp_write = fopen ( strcat(fp_write_name, file_name) , "wb" ))) {
 	printf ("Could not open file \"copy_%s\" for reading \n", file_name);
 	return (-1);
     }
     
-    ftime(&t_begin);
+    
     
     /* reading lines */
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-	fprintf(fp_write, "%s", current_line);
+	ftime(&t_begin);
+	fputs(current_line, fp_write);
+	ftime(&t_end);
+	time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
+	    + (t_end.millitm - t_begin.millitm)); 
     }
-    
-    ftime(&t_end);
+      
     fclose(fp_write);
     
     /* time elapsed in milliseconds */
-    time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
-	+ (t_end.millitm - t_begin.millitm)); 
     
     /* result in MB per second */
     int MB = 1024 * 1024;
