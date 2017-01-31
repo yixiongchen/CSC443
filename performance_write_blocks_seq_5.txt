@@ -1,0 +1,9 @@
+block size: 512 bytes, rate: 33.162 MBPS
+block size: 1024 bytes, rate: 34.053 MBPS
+block size: 4096 bytes, rate: 34.005 MBPS
+block size: 8192 bytes, rate: 32.905 MBPS
+block size: 16384 bytes, rate: 34.209 MBPS
+block size: 32768 bytes, rate: 29.820 MBPS
+block size: 1048576 bytes, rate: 24.344 MBPS
+block size: 2097152 bytes, rate: 15.272 MBPS
+block size: 4194304 bytes, rate: 33.219 MBPS

@@ -29,9 +29,9 @@ void write_blocks_rand(char * file_name, int random_num){
 
      /* determine the file size   */
     fseek(fp_write, 0, SEEK_END);
-    int file_size = ftell(fp_write);
+    long file_size = ftell(fp_write);
     fseek(fp_write, 0, SEEK_SET); 
-    int total_records = file_size / sizeof(Record);
+    long total_records = file_size / sizeof(Record);
 
     // proceed with allocating memory and reading the file
     Record* buffer = (Record *) calloc (1, sizeof(Record));
@@ -40,8 +40,7 @@ void write_blocks_rand(char * file_name, int random_num){
   
     ftime(&t_begin); 
     for(i = 0; i < random_num; i++){
-    	int update_position = rand() % total_records;
-	printf("Updated records = %d\n", update_position+1);
+    	long update_position = rand() % total_records;
     	fseek(fp_write, update_position * sizeof(Record), SEEK_SET);
     	fwrite (buffer, sizeof(Record), 1, fp_write);
     	fseek(fp_write, 0, SEEK_SET);

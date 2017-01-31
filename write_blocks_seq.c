@@ -55,7 +55,6 @@ int main(int argc, char **argv) {
 	    Record r = parseToRecord(current_line);
 	    if (records_in_buffer >= records_per_block){
 		fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-		fflush (fp_write);
 		j = 0;
 		records_in_buffer = 0;
 	    }
@@ -70,10 +69,9 @@ int main(int argc, char **argv) {
 	fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
     }
     
-    fflush(fp_write);
-    fclose(fp_write);
-    
     ftime(&t_end);
+    
+    fclose(fp_write);
     
     free(buffer);
     fclose(fp_read);
@@ -82,8 +80,9 @@ int main(int argc, char **argv) {
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
 	+ (t_end.millitm - t_begin.millitm)); 
  
-    /* result in B per second */
-    printf ("block size: %d bytes, rate: %.3f BPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000));
+    /* result in MB per second */
+    int MB = 1024 * 1024;
+    printf ("block size: %d bytes, rate: %.3f MBPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 
     return(0);
 }

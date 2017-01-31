@@ -28,25 +28,22 @@ void write_ram_rand(char * file_name, int random_num){
     
     /* determine the file size */
     fseek(fp_read, 0, SEEK_END);
-    int file_size = ftell(fp_read);
+    long file_size = ftell(fp_read);
     fseek(fp_read, 0, SEEK_SET); 
-    int total_records = file_size / sizeof(Record);
+    long total_records = file_size / sizeof(Record);
 
     // proceed with allocating memory and reading the file
-    Record* buffer = (Record *) calloc (total_records, sizeof(Record)) ;
+    Record* buffer = (Record *) calloc (total_records, sizeof(Record));
 
     // Read records from the file to the buffer.
+    long result = fread (buffer, sizeof(Record), total_records, fp_read);
     ftime(&t_begin);
-    int result = fread (buffer, sizeof(Record), total_records, fp_read);
     if (result == total_records){
         /*update the buffer generate i positions*/
         for(i = 0; i < random_num; i++){
-	    int update_position = rand() % total_records;
-            printf("position: %d\n", update_position);
-            printf("old buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
+	    long update_position = rand() % total_records;
 	    buffer[update_position].uid1 = 1;
 	    buffer[update_position].uid2 = 2;
-            printf("new buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
         }
     	ftime(&t_end);
     }
@@ -64,7 +61,7 @@ void write_ram_rand(char * file_name, int random_num){
     
     long MB = 1024 * 1024;
     /* result in MB per second */
-    printf ("Data rate: %.3f MBPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+    printf ("Data rate: %.3f MBPS\n", ((random_num*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
 }
 
 

@@ -14,9 +14,9 @@
  */
 void read_ram_seq(char *filename){
     FILE *fp_read;
-    int most_follow_id = NULL;
+    int most_follow_id = 0;
     int max_num = 0;
-    int current_id = NULL;
+    int current_id = 0;
     int current_num = 0;
     int unique_ids = 0;
 
@@ -32,15 +32,15 @@ void read_ram_seq(char *filename){
     
     /* determine the file size */
     fseek(fp_read, 0, SEEK_END);
-    int file_size = ftell(fp_read);
+    long file_size = ftell(fp_read);
     fseek(fp_read, 0, SEEK_SET); 
-    int total_records = file_size / sizeof(Record);
+    long total_records = file_size / sizeof(Record);
 
     // proceed with allocating memory and reading the file
     Record* buffer = (Record *) calloc (total_records, sizeof(Record)) ;
 
     // Read records from the file to the buffer.
-    int result = fread (buffer, sizeof(Record), total_records, fp_read);
+    long result = fread (buffer, sizeof(Record), total_records, fp_read);
     if (result == total_records){
 	/*compute the query*/
 	int i;

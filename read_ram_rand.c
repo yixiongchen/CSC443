@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     float overall_avg;
     int overall_max_id;
     int total_unique_ids = 0;
-    int total_read_records = 0;
+    long total_read_records = 0;
     
     FILE *fp_read;
     time_t t;
@@ -26,9 +26,9 @@ int main(int argc, char **argv) {
     
     // Get total number of records
     fseek(fp_read, 0, SEEK_END);
-    int file_size = ftell(fp_read);
+    long file_size = ftell(fp_read);
     fseek(fp_read, 0, SEEK_SET);
-    int total_records = file_size / sizeof(Record);
+    long total_records = file_size / sizeof(Record);
     
     /* Intializes random number generator */
     srand((unsigned) time(&t));
@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
 	int i;
 	for (i = 0; i < X; i++){
 	    // Generate a random number in range [0, total_records)
-	    int start = rand() % total_records;
-	    int end = start + records_per_block;
+	    long start = rand() % total_records;
+	    long end = start + records_per_block;
 	    if (end > total_records){
 		end = total_records;
 	    }
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 	    
 	    int sample_max_id = 0;
 	    int sample_max_num = 0;
-	    int current_id = NULL;
+	    int current_id = 0;
 	    int current_num = 0;
 	    int unique_uids = 0;
 	    
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 	    }
 	    
 	    total_unique_ids += unique_uids;
-	    printf("start_record = %d, sample_max_id = %d, sample_max_num = %d\n, number of unique ids = %d\n", start+1, sample_max_id, sample_max_num, unique_uids);
+	    //printf("start_record = %d, sample_max_id = %d, sample_max_num = %d\n, number of unique ids = %d\n", start+1, sample_max_id, sample_max_num, unique_uids);
 	}
     }
     else{
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
  
     long MB = 1024 * 1024;
     /* result in MB per second */
-    printf ("block size: %d bytes, rate: %.3f MBPS\n", block_size, ((X*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+    printf ("block size: %d bytes, rate: %.3f MBPS\n", block_size, (total_read_records*sizeof(Record)/MB)/(float)time_spent_ms * 1000);
     
     overall_avg = (float) total_read_records / total_unique_ids;
     
