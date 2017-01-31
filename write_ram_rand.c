@@ -11,11 +11,10 @@
 
 void write_ram_rand(char * file_name, int random_num){
 
-	FILE *fp_read;
+    FILE *fp_read;
     struct timeb t_begin, t_end;
     long time_spent_ms;
     int i;
-
 
     /* Intializes random number generator */
     srand (time(NULL));;
@@ -42,11 +41,11 @@ void write_ram_rand(char * file_name, int random_num){
     if (result == total_records){
         /*update the buffer generate i positions*/
         for(i = 0; i < random_num; i++){
-        	int update_position = rand() % total_records;
+	    int update_position = rand() % total_records;
             printf("position: %d\n", update_position);
             printf("old buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
-        	buffer[update_position].uid1 = 1;
-        	buffer[update_position].uid2 = 2;
+	    buffer[update_position].uid1 = 1;
+	    buffer[update_position].uid2 = 2;
             printf("new buffer %d %d\n", buffer[update_position].uid1, buffer[update_position].uid2);
         }
     	ftime(&t_end);
@@ -66,14 +65,12 @@ void write_ram_rand(char * file_name, int random_num){
     long MB = 1024 * 1024;
     /* result in MB per second */
     printf ("Data rate: %.3f MBPS\n", ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
-
-
 }
 
 
 int main(int argc, char **argv){
 
-	char *filename = argv[1];
+    char *filename = argv[1];
     int random_num = atoi(argv[2]); 
     write_ram_rand(filename, random_num);
     return 0;

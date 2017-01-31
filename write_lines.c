@@ -22,6 +22,11 @@ int main(int argc, char **argv) {
 	return (-1);
     }
     
+    /*first get the size of opening file*/
+    fseek(fp_read, 0, SEEK_END);
+    int file_size = ftell(fp_read);
+    fseek(fp_read, 0, SEEK_SET); 
+    
     char fp_write_name[strlen(file_name)+5];
     strcpy(fp_write_name, "copy_");
     /* open another csv file for writing */
@@ -44,8 +49,8 @@ int main(int argc, char **argv) {
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
 	+ (t_end.millitm - t_begin.millitm)); 
     
-    /* result in MB per second */
-    printf ("Time spent: %.3f second(s)\n", (float)time_spent_ms/1000);
+    /* result in B per second */
+    printf ("rate: %.3f BPS\n", (file_size)/(float)time_spent_ms * 1000));
     
     fclose(fp_read);  
 

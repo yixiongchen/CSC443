@@ -23,6 +23,7 @@ f2 = open("performance_write_lines.txt", "w")
 
 for size in sizes:
     subprocess.run(["write_blocks_seq", filename, str(size)], stdout=f1)
+    subprocess.run(["rm", "records.dat"])
 
 subprocess.run(["write_lines", filename], stdout=f2)
 

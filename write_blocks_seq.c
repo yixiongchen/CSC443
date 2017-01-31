@@ -82,9 +82,8 @@ int main(int argc, char **argv) {
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
 	+ (t_end.millitm - t_begin.millitm)); 
  
-    long MB = 1024 * 1024;
-    /* result in MB per second */
-    printf ("block size: %d bytes, rate: %.3f MBPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/MB);
+    /* result in B per second */
+    printf ("block size: %d bytes, rate: %.3f BPS\n", block_size, ((total_records*sizeof(Record))/(float)time_spent_ms * 1000));
 
     return(0);
 }
