@@ -17,7 +17,7 @@ void read_blocks_seq(char * file_name, int blocksize){
     FILE *fp_read;
     int most_follow_id;
     int max_num = 0;
-    int current_id = NULL;
+    int current_id = 0;
     int current_num = 0;
     int unique_uids = 0;
 
@@ -36,8 +36,6 @@ void read_blocks_seq(char * file_name, int blocksize){
     fseek(fp_read, 0, SEEK_SET); 
     int total_following = file_size / sizeof(Record);
     int unread_records = total_following;
-    printf("Number of unread records is %d.\n", unread_records);
-
    
     /* read records into buffer */
     ftime(&t_begin); 
@@ -57,7 +55,6 @@ void read_blocks_seq(char * file_name, int blocksize){
 	/*compute the query*/
 	int i;
 	for (i = 0; i < length; i++){
-        printf("[%d] Record: %d %d\n", i+1, buffer[i].uid1, buffer[i].uid2);
 	    if(buffer[i].uid1 == current_id){
 		current_num += 1;
 	    }

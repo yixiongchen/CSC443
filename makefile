@@ -1,10 +1,10 @@
-CC = gcc
+CC = g++
 CFLAGS = -O3 -Wall 
-CFLAGS += -D_LARGEFILE_SOURCE
+FLAGS += -D_LARGEFILE_SOURCE
 CFLAGS += -fno-exceptions
 CFLAGS += -finline-functions
 CFLAGS += -funroll-loops
-CFLAGS += -D_FILE_OFFSET_BITS=64
+FLAGS += -D_FILE_OFFSET_BITS=64
  
 # Source files
 WRITE_BLOCKS_SRC=write_blocks_seq.c
@@ -24,21 +24,21 @@ all: write_blocks_seq write_lines read_blocks_seq read_ram_seq read_blocks_rand 
  
 #sequential writing in blocks
 write_blocks_seq: $(WRITE_BLOCKS_SRC)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 write_lines: $(WRITE_LINES_SRC)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 read_blocks_seq: $(READ_BLOCKS_SRC)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 read_ram_seq: $(READ_RAM_SRC)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 read_blocks_rand: $(READ_BLOCKS_RAND)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGOPT) $^ -o $@
 read_ram_rand: $(READ_RAM_RAND)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 write_blocks_rand: $(WRITE_BLOCKS_RAND)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 write_ram_rand: $(WRITE_RAM_RAND)
-	$(CC) $(CFLAGS) $^ -o $@ 
+	$(CC) $(CFLAGOPT) $^ -o $@ 
 
 clean:  
 

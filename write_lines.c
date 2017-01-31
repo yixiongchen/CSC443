@@ -42,15 +42,16 @@ int main(int argc, char **argv) {
 	fprintf(fp_write, "%s", current_line);
     }
     
-    fclose(fp_write);
     ftime(&t_end);
+    fclose(fp_write);
     
     /* time elapsed in milliseconds */
     time_spent_ms = (long) (1000 *(t_end.time - t_begin.time)
 	+ (t_end.millitm - t_begin.millitm)); 
     
-    /* result in B per second */
-    printf ("rate: %.3f BPS\n", (file_size)/(float)time_spent_ms * 1000);
+    /* result in MB per second */
+    int MB = 1024 * 1024;
+    printf ("rate: %.3f MBPS\n", ((file_size)/(float)time_spent_ms * 1000)/MB);
     
     fclose(fp_read);  
 
