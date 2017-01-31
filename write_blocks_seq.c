@@ -12,7 +12,6 @@ Record parseToRecord(char* str) {
     
     r.uid1 = atoi(strtok(str, ","));
     r.uid2 = atoi(strtok(NULL, ","));
-
     return r; 
 }
 
@@ -50,19 +49,22 @@ int main(int argc, char **argv) {
     /* reading lines */
     ftime(&t_begin);
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
+
 	current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
 	if (strlen(current_line) > 0){
 	    Record r = parseToRecord(current_line);
 	    if (records_in_buffer >= records_per_block){
-		fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
-		j = 0;
-		records_in_buffer = 0;
+            fwrite ( buffer, sizeof(Record), records_in_buffer, fp_write);
+            j = 0;
+            records_in_buffer = 0;
 	    }
 	    buffer[j] = r;
 	    j++;
 	    records_in_buffer++;
 	    total_records++;
 	}
+
+
     }
     
     if (records_in_buffer > 0){
@@ -72,7 +74,7 @@ int main(int argc, char **argv) {
     ftime(&t_end);
     
     fclose(fp_write);
-    
+
     free(buffer);
     fclose(fp_read);
     

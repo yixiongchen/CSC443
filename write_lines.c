@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     char fp_write_name[strlen(file_name)+5];
     strcpy(fp_write_name, "copy_");
     /* open another csv file for writing */
-    if (!(fp_write = fopen ( strcat(fp_write_name, file_name) , "wb" ))) {
+    if (!(fp_write = fopen ( strcat(fp_write_name, file_name) , "w+" ))) {
 	printf ("Could not open file \"copy_%s\" for reading \n", file_name);
 	return (-1);
     }
