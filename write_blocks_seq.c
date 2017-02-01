@@ -60,7 +60,11 @@ int main(int argc, char **argv) {
 		time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
 		    + (t_end.millitm - t_begin.millitm)); 
 	    }
+	    ftime(&t_begin);
 	    buffer[records_in_buffer] = r;
+	    ftime(&t_end);
+	    time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
+		+ (t_end.millitm - t_begin.millitm)); 
 	    records_in_buffer++;
 	    total_records++;
 	}

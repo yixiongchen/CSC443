@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
     while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
 	ftime(&t_begin);
 	fputs(current_line, fp_write);
+	fflush(fp_write);
 	ftime(&t_end);
 	time_spent_ms += (long) (1000 *(t_end.time - t_begin.time)
 	    + (t_end.millitm - t_begin.millitm)); 
